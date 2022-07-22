@@ -302,18 +302,16 @@ function reverseInteger(num) {
  */
 function isCreditCardNumber(ccn) {
   const arr = Array.from(String(ccn).split(''));
-  const originalCheckDigit = +arr[arr.length - 1];
-  const isCardNumberEven = ccn % 2 === 0;
-  const resultingDigits = arr.slice(0, arr.length - 1).map((el, index) => {
-    const condition = isCardNumberEven ? index % 2 === 0 : index % 2 !== 0;
-    if (condition) {
-      return +el;
+  const isCNNEven = (arr.length - 2) % 2;
+  const resultingDigits = arr.map((el, index) => {
+    let value = +el;
+    if (index % 2 === isCNNEven) {
+      value *= 2;
     }
-    const value = (+el * 2);
-    return (value > 9 ? value + 1 : value) % 10;
+    value -= value > 9 ? 9 : 0;
+    return value;
   }).reduce((pV, cV) => pV + cV);
-  const checkDigit = 10 - (resultingDigits % 10);
-  return checkDigit === originalCheckDigit;
+  return resultingDigits % 10 === 0;
 }
 
 /**
@@ -330,8 +328,9 @@ function isCreditCardNumber(ccn) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const result = String(num).split('').reduce((pV, cV) => +pV + +cV);
+  return result > 9 ? getDigitalRoot(result) : result;
 }
 
 
@@ -381,8 +380,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -421,8 +420,15 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const matrix = Array(m2[0].length).fill(0).map(() => Array(m1.length).fill(0));
+  return matrix.map((row, rIndex) => row.map((el, index) => {
+    let value = 0;
+    for (let j = 0; j < m2.length; j += 1) {
+      value += m1[rIndex][j] * m2[j][index];
+    }
+    return value;
+  }));
 }
 
 
