@@ -119,47 +119,52 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  selector: '',
-  element(value) {
-    this.selector += value;
-    return this;
-  },
-
-  id(value) {
-    this.selector += `#${value}`;
-    return this;
-  },
-
-  class(value) {
-    this.selector += `.${value}`;
-    return this;
-  },
-
-  attr(value) {
-    this.selector += `[${value}]`;
-    return this;
-  },
-
-  pseudoClass(value) {
-    this.selector += `:${value}`;
-    return this;
-  },
-
-  pseudoElement(value) {
-    this.selector += `::${value}`;
-    return this;
-  },
-
-  combine(selector1, combinator, selector2) {
-    this.selector = `${selector1} ${combinator} ${selector2}`;
-    return this;
-  },
-
-  stringify() {
-    const result = this.selector;
-    this.selector = '';
-    return result;
-  },
+  // selector: '',
+  // element(value) {
+  //   return this.createNewObject(value, 'element');
+  // },
+  // id(value) {
+  //   return this.createNewObject(`#${value}`, 'id');
+  // },
+  // class(value) {
+  //   return this.createNewObject(`.${value}`, 1);
+  // },
+  // attr(value) {
+  //   return this.createNewObject(`[${value}]`, 1);
+  // },
+  // pseudoClass(value) {
+  //   return this.createNewObject(`:${value}`, 'pseudoClass');
+  // },
+  // pseudoElement(value) {
+  //   return this.createNewObject(`::${value}`, 1);
+  // },
+  // combine(selector1, combinator, selector2) {
+  //   const obj1 = selector1.stringify();
+  //   const obj2 = selector2.stringify();
+  //   return this.createNewObject(`${obj1} ${combinator} ${obj2}`);
+  // },
+  // stringify() {
+  //   return this.selector;
+  // },
+  // createNewObject(value, errorType) {
+  //   this.checkOnError(errorType);
+  //   const obj = Object.create(this);
+  //   this.errorType = errorType;
+  //   obj.selector += value;
+  //   return obj;
+  // },
+  // checkOnError(errorType) {
+  //   console.log(this.errorType);
+  //   if (
+  //     errorType === this.errorType
+  //     && (errorType === 'element'
+  //     || errorType === 'id'
+  //     || errorType === 'pseudoClass')
+  //   ) {
+  // eslint-disable-next-line max-len
+  //     throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+  //   }
+  // },
 };
 
 
