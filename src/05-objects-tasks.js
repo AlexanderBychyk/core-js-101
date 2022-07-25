@@ -117,63 +117,85 @@ function fromJSON(proto, json) {
  *
  *  For more examples see unit tests.
  */
+class SuperBaseElementSelector {
+  constructor() {
+    this.selector = '';
+    this.errorType = [];
+    this.position = [];
+  }
 
-const cssSelectorBuilder = {
-  selector: '',
-  errorType: [],
   element(value) {
-    return this.createNewObject(value, 'element', true);
+    return this.createNewObject(value, 0, 'element', true);
+  }
+
+  id(value) {
+    return this.createNewObject(`#${value}`, 1, 'id', true);
+  }
+
+  class(value) {
+    return this.createNewObject(`.${value}`, 2, 'class');
+  }
+
+  attr(value) {
+    return this.createNewObject(`[${value}]`, 3, 'attr');
+  }
+
+  pseudoClass(value) {
+    return this.createNewObject(`:${value}`, 4, 'pseudoClass');
+  }
+
+  pseudoElement(value) {
+    return this.createNewObject(`::${value}`, 5, 'pseudoElement', true);
+  }
+
+  createNewObject(value, position, errorType, isUnic = false) {
+    this.checkOnError(errorType, isUnic, position);
+    this.position.push(position);
+    this.errorType.push(errorType);
+    this.selector += value;
+    return this;
+  }
+
+  stringify(value) {
+    return value ? value.selector : this.selector;
+  }
+
+  checkOnError(errorType, isUnic, position) {
+    if (this.errorType.includes(errorType) && isUnic) {
+      throw Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
+    if (this.position[this.position.length - 1] > position) {
+      throw Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    }
+  }
+}
+const cssSelectorBuilder = {
+  element(value) {
+    return new SuperBaseElementSelector().element(value);
   },
   id(value) {
-    return this.createNewObject(`#${value}`, 'id', true);
+    return new SuperBaseElementSelector().id(value);
   },
   class(value) {
-    return this.createNewObject(`.${value}`, 'class');
+    return new SuperBaseElementSelector().class(value);
   },
   attr(value) {
-    return this.createNewObject(`[${value}]`, 'attr');
+    return new SuperBaseElementSelector().attr(value);
   },
   pseudoClass(value) {
-    return this.createNewObject(`:${value}`, 'pseudoClass');
+    return new SuperBaseElementSelector().pseudoClass(value);
   },
   pseudoElement(value) {
-    return this.createNewObject(`::${value}`, 'pseudoElement', true);
+    return new SuperBaseElementSelector().pseudoElement(value);
   },
   combine(selector1, combinator, selector2) {
     const obj1 = selector1.stringify();
     const obj2 = selector2.stringify();
-    const obj = Object.create(this);
-    obj.selector = (`${obj1} ${combinator} ${obj2}`);
-    return obj;
+    this.selector = (`${obj1} ${combinator} ${obj2}`);
+    return this;
   },
   stringify() {
-    return this.selector;
-  },
-  createNewObject(value, errorType, isUnic = false) {
-    if (isUnic) {
-      this.checkOnError(errorType);
-    }
-    this.errorType.push(errorType);
-    const obj = Object.create(this);
-    obj.selector += value;
-    return obj;
-  },
-  checkOnError(errorType) {
-    if (this.errorType.includes(errorType)) {
-      // throw Error('Element, id and pseudo-element
-      // should not occur more then one time inside the selector');
-    }
-    // console.log(errorType);
-    // if (
-    //   errorType === this.errorType
-    //   && (errorType === 'element'
-    //   || errorType === 'id'
-    //   || errorType === 'pseudoClass')
-    // ) {
-    //   // eslint-disable-next-line max-len
-    //   throw new Error('Element,
-    // id and pseudo-element should not occur more then one time inside the selector');
-    // }
+    return new SuperBaseElementSelector().stringify(this);
   },
 };
 
