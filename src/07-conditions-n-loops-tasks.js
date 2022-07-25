@@ -355,8 +355,32 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const bracketsConfig = [['(', ')'], ['[', ']'], ['{', '}'], ['<', '>']];
+  const vault = [];
+  let isCorrect = true;
+  if (str.length % 2 !== 0) {
+    isCorrect = false;
+  } else {
+    for (let i = 0; i < str.length; i += 1) {
+      bracketsConfig.forEach((el) => {
+        if ((str[i] === el[0]) && (str[i] === el[1])) {
+          if (vault[vault.length - 1] !== str[i]) {
+            vault.push(str[i]);
+          } else {
+            vault.pop();
+          }
+        } else if (el[0] === str[i]) {
+          vault.push(str[i]);
+        } else if (el[1] === str[i]) {
+          if (vault[vault.length - 1] === el[0]) vault.pop();
+        }
+      });
+    }
+    isCorrect = vault.length === 0;
+  }
+
+  return isCorrect;
 }
 
 
@@ -398,6 +422,7 @@ function toNaryString(num, n) {
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
 function getCommonDirectoryPath(/* pathes */) {
+  // console.log(i+2)
   throw new Error('Not implemented');
 }
 
@@ -462,8 +487,32 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let arr = [];
+  position.forEach((row) => arr.push(row));
+  const crossDown = [];
+  const crossUp = [];
+  for (let i = 0; i < position.length; i += 1) {
+    const row = [];
+    for (let j = 0; j < position.length; j += 1) {
+      row.push(position[j][i]);
+      if (j === i) {
+        crossDown.push(position[j][i]);
+      }
+      if ((j === 0 && i === 2) || (j === 1 && i === 1) || (j === 2 && i === 0)) {
+        crossUp.push(position[j][i]);
+      }
+    }
+    arr.push(row);
+  }
+  arr.push(crossDown);
+  arr.push(crossUp);
+  arr = arr.map((el) => el.join(''));
+  return arr.map((el) => {
+    if (el.includes('XXX')) return 'X';
+    if (el.includes('000')) return '0';
+    return undefined;
+  }).filter((el) => el !== undefined)[0];
 }
 
 
