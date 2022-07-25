@@ -150,7 +150,6 @@ const cssSelectorBuilder = {
     return this.selector;
   },
   createNewObject(value, errorType, isUnic = false) {
-    console.log(value);
     if (isUnic) {
       this.checkOnError(errorType);
     }
