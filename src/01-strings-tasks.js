@@ -204,11 +204,9 @@ function extractEmails(str) {
  */
 function getRectangleString(width, height) {
   let str = '';
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < height; i++) {
+  for (let i = 0; i < height; i += 1) {
     const row = [];
-    // eslint-disable-next-line no-plusplus
-    for (let j = 0; j < width; j++) {
+    for (let j = 0; j < width; j += 1) {
       if (i === 0 && j === 0) {
         row.push('┌');
       }
